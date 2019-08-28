@@ -13,6 +13,7 @@ YTT102 = 'YTT102: `sys.version[2]` referenced (python3.10), use `sys.version_inf
 YTT103 = 'YTT103: `sys.version` compared to string (python3.10), use `sys.version_info`'  # noqa: E501
 YTT201 = 'YTT201: `sys.version_info[0] == 3` referenced (python4), use `>=`'
 YTT202 = 'YTT202: `six.PY3` referenced (python4), use `not six.PY2`'
+YTT203 = 'YTT203: `sys.version_info[1]` referenced (pythonTODO), use `sys.version_info >= (x, y)`'  # noqa: E501
 YTT301 = 'YTT301: `sys.version[0]` referenced (python10), use `sys.version_info`'  # noqa: E501
 
 
@@ -66,7 +67,15 @@ class Visitor(ast.NodeVisitor):
             self.errors.append((
                 node.value.lineno, node.value.col_offset, YTT301,
             ))
-
+        elif (
+                self._is_sys('version_info', node.value) and
+                isinstance(node.slice, ast.Index) and
+                isinstance(node.slice.value, ast.Num) and
+                node.slice.value.n == 1
+        ):
+            self.errors.append((
+                node.lineno, node.col_offset, YTT203,
+            ))
         self.generic_visit(node)
 
     def visit_Compare(self, node: ast.Compare) -> None:
