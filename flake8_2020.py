@@ -15,6 +15,8 @@ YTT204 = 'YTT204 `sys.version_info.minor` compared to integer (python4), compare
 YTT301 = 'YTT301 `sys.version[0]` referenced (python10), use `sys.version_info`'  # noqa: E501
 YTT302 = 'YTT302 `sys.version` compared to string (python10), use `sys.version_info`'  # noqa: E501
 YTT303 = 'YTT303 `sys.version[:1]` referenced (python10), use `sys.version_info`'  # noqa: E501
+YTT401 = 'YTT401 `sys.version[:4]` referenced (python3.100), use `sys.version_info`'  # noqa: E501
+YTT501 = 'YTT501 `sys.version[:5]` referenced (python3.1000), use `sys.version_info`'  # noqa: E501
 
 
 def _is_index(node: ast.Subscript, n: int) -> bool:
@@ -70,6 +72,14 @@ class Visitor(ast.NodeVisitor):
         elif self._is_sys_version_upper_slice(node, 3):
             self.errors.append((
                 node.value.lineno, node.value.col_offset, YTT101,
+            ))
+        elif self._is_sys_version_upper_slice(node, 4):
+            self.errors.append((
+                node.value.lineno, node.value.col_offset, YTT401,
+            ))
+        elif self._is_sys_version_upper_slice(node, 5):
+            self.errors.append((
+                node.value.lineno, node.value.col_offset, YTT501,
             ))
         elif self._is_sys('version', node.value) and _is_index(node, n=2):
             self.errors.append((

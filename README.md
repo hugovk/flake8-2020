@@ -39,6 +39,8 @@ pip install flake8-2020
 | YTT301 | `sys.version[0]` referenced (python10)                 |
 | YTT302 | `sys.version` compared to string (python10)            |
 | YTT303 | `sys.version[:1]` referenced (python10)                |
+| YTT401 | `sys.version[:4]` referenced (python3.100)             |
+| YTT501 | `sys.version[:5]` referenced (python3.1000)            |
 
 ## rationale
 

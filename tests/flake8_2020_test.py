@@ -45,6 +45,34 @@ def test_py310_slicing_of_sys_version_string(s):
 @pytest.mark.parametrize(
     's',
     (
+        'import sys\nprint(sys.version[:4])',
+        'from sys import version\nprint(version[:4])',
+    ),
+)
+def test_py3100_slicing_of_sys_version_string(s):
+    assert results(s) == {
+        '2:6: YTT401 `sys.version[:4]` referenced (python3.100), use '
+        '`sys.version_info`',
+    }
+
+
+@pytest.mark.parametrize(
+    's',
+    (
+        'import sys\nprint(sys.version[:5])',
+        'from sys import version\nprint(version[:5])',
+    ),
+)
+def test_py31000_slicing_of_sys_version_string(s):
+    assert results(s) == {
+        '2:6: YTT501 `sys.version[:5]` referenced (python3.1000), use '
+        '`sys.version_info`',
+    }
+
+
+@pytest.mark.parametrize(
+    's',
+    (
         'import sys\npy_minor = sys.version[2]',
         'from sys import version\npy_minor = version[2]',
     ),
